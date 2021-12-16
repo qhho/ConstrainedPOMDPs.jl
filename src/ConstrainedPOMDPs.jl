@@ -9,29 +9,10 @@ using POMDPSimulators
 using Random: Random, AbstractRNG
 
 export
-    # Abtract Type
+    # Main Type
     ConstrainedMDPWrapper,
     ConstrainedPOMDPWrapper,
-    ConstrainWrapper,
-
-    #Model Functions from POMDPs.jl
-    reward,
-    states,
-    actions,
-    observations,
-    actionindex,
-    discount,
-    stateindex,
-    statetype,
-    actiontype,
-    states,
-    initialstate,
-    obsindex,
-    transition,
-    observation,
-    ordered_states,
-    ordered_actions,
-    ordered_observations,
+    ConstrainedWrapper,
 
     # Additional Model Functions
     cost,
@@ -40,9 +21,7 @@ export
     simulate,
     RolloutSimulator
 
-
 include("core.jl")
 include("rollout.jl")
-# include("ConstrainedRockSample.jl")
 
 end

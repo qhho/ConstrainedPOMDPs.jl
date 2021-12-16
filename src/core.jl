@@ -99,21 +99,14 @@ POMDPs.observations(w::ConstrainedPOMDPWrapper) = observations(w.m)
 POMDPs.actionindex(w::ConstrainWrapper, a) = actionindex(w.m, a)
 POMDPs.discount(w::ConstrainWrapper) = discount(w.m)
 POMDPs.stateindex(w::ConstrainWrapper, s) = stateindex(w.m, s)
-
 POMDPs.statetype(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = statetype(m.m)
 POMDPs.actiontype(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = actiontype(m.m)
 POMDPs.obstype(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = obstype(m.m)
-
 POMDPs.states(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = states(m.m)
-
 POMDPs.initialstate(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = initialstate(m.m)
-
 POMDPs.obsindex(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, o) = obsindex(m.m, o)
-
 POMDPs.transition(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s, a) = transition(m.m, s, a)
-
 POMDPs.observation(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, a, s) = observation(m.m, a, s)
-
 POMDPModelTools.ordered_states(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_states(m.m)
 POMDPModelTools.ordered_actions(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_actions(m.m)
 POMDPModelTools.ordered_observations(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_observations(m.m)

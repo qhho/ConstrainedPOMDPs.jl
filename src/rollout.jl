@@ -1,5 +1,5 @@
 # RolloutSimulator
-# maintained by @zsunberg
+# gotten from @zsunberg
 
 """
     RolloutSimulator(rng, max_steps)
@@ -21,7 +21,6 @@ See also: [`HistoryRecorder`](@ref), [`run_parallel`](@ref)
 
 struct RolloutSimulator{RNG<:AbstractRNG} <: Simulator
     rng::RNG
-
     # optional: if these are null, they will be ignored
     max_steps::Union{Nothing,Int}
     eps::Union{Nothing,Float64}
@@ -51,40 +50,24 @@ function simulate(sim::RolloutSimulator, pomdp::ConstrainedPOMDPWrapper, policy:
     else
         eps = sim.eps
     end
-
     if sim.max_steps == nothing
         max_steps = typemax(Int)
     else
         max_steps = sim.max_steps
     end
-
     disc = 1.0
     r_total = 0.0
     c_total = 0.0
-
     b = initialize_belief(updater, initial_belief)
-
     step = 1
-
     while disc > eps && !isterminal(pomdp, s) && step <= max_steps
-
         a = action(policy, b)
         sp, o, r, c = gen(pomdp, s, a, sim.rng)
-        
-        # if (a >= 5)
-        #     @show a, r, c
-        # end
-        # if r > 0.0
-        #     print(r)
-        # end
         r_total += disc*r
         c_total += disc*c
-
         s = sp
-
         bp = update(updater, b, a, o)
         b = bp
-
         disc *= discount(pomdp)
         step += 1
     end
