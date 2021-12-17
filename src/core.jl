@@ -14,7 +14,7 @@ Constrain(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper(m, c
 
 ############
 
-struct ConstrainedMDPWrapper{S,A, M<:MDP} <: MDP{Tuple{S, Int}, A}
+mutable struct ConstrainedMDPWrapper{S,A, M<:MDP} <: MDP{Tuple{S, Int}, A}
     m::M
     constraints::Vector{Float64}
     λ::Float64
@@ -24,7 +24,7 @@ end
 
 ConstrainedMDPWrapper(m::MDP, constraints::Vector{Float64}) = ConstrainedMDPWrapper{statetype(m), actiontype(m), typeof(m)}(m, constraints)
 
-struct ConstrainedPOMDPWrapper{S,A,O,M<:POMDP} <: POMDP{Tuple{S, Int}, A, Tuple{O,Int}}
+mutable struct ConstrainedPOMDPWrapper{S,A,O,M<:POMDP} <: POMDP{Tuple{S, Int}, A, Tuple{O,Int}}
     m::M
     constraints::Vector{Float64}
     λ::Float64
