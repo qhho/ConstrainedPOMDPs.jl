@@ -17,8 +17,6 @@ Constrain(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper(m, c
 mutable struct ConstrainedMDPWrapper{S,A, M<:MDP} <: MDP{Tuple{S, Int}, A}
     m::M
     constraints::Vector{Float64}
-    λ::Float64
-    initialized::Bool
 end
 
 
@@ -27,11 +25,9 @@ ConstrainedMDPWrapper(m::MDP, constraints::Vector{Float64}) = ConstrainedMDPWrap
 mutable struct ConstrainedPOMDPWrapper{S,A,O,M<:POMDP} <: POMDP{Tuple{S, Int}, A, Tuple{O,Int}}
     m::M
     constraints::Vector{Float64}
-    λ::Float64
-    initialized::Bool
 end
 
-ConstrainedPOMDPWrapper(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper{statetype(m), actiontype(m), obstype(m), typeof(m)}(m, constraints::Vector{Float64}, 0.0, false)
+ConstrainedPOMDPWrapper(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper{statetype(m), actiontype(m), obstype(m), typeof(m)}(m, constraints)
 
 const ConstrainWrapper = Union{ConstrainedMDPWrapper, ConstrainedPOMDPWrapper}
 
@@ -107,6 +103,6 @@ POMDPs.initialstate(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = initialstate
 POMDPs.obsindex(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, o) = obsindex(m.m, o)
 POMDPs.transition(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s, a) = transition(m.m, s, a)
 POMDPs.observation(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, a, s) = observation(m.m, a, s)
-POMDPModelTools.ordered_states(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_states(m.m)
-POMDPModelTools.ordered_actions(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_actions(m.m)
-POMDPModelTools.ordered_observations(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_observations(m.m)
+POMDPTools.ordered_states(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_states(m.m)
+POMDPTools.ordered_actions(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_actions(m.m)
+POMDPTools.ordered_observations(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_observations(m.m)

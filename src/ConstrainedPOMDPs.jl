@@ -4,7 +4,7 @@ Provides a basic interface for defining and solving constrained MDPs and POMDPs
 module ConstrainedPOMDPs
 
 using POMDPs
-using POMDPModelTools
+using POMDPTools
 using POMDPSimulators
 using Random: Random, AbstractRNG
 
