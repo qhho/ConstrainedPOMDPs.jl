@@ -4,7 +4,6 @@ authors = ["qiheng <qi.ho@colorado.edu>"]
 version = "0.1.0"
 
 [deps]
-POMDPSimulators = "e0d0a172-29c6-5d4e-96d0-f262df5d01fd"
 POMDPTools = "7588e00f-9cae-40de-98dc-e0c70c48cdd7"
 POMDPs = "a93abf59-7444-517b-a68a-c42f96afdd7d"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
