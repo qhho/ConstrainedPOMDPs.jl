@@ -84,7 +84,7 @@ end
 # Forward parts of POMDPs interface
 
 ####################
-
+constraint_size(w::ConstrainWrapper) = length(w.constraints)
 POMDPs.reward(w::ConstrainWrapper, ss::Tuple{<:Any,Int}, a, ssp::Tuple{<:Any,Int}) = reward(w.m, first(ss), a, first(ssp))
 POMDPs.reward(w::ConstrainedPOMDPWrapper, ss, a, ssp, so) = reward(w.m, first(ss), a, first(ssp), first(so))
 POMDPs.reward(w::ConstrainWrapper, ss::Tuple{<:Any,Int}, a) = reward(w.m, first(ss), a)
