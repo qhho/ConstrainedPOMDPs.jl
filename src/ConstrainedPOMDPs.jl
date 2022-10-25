@@ -19,7 +19,8 @@ export
     constraints,
     Constrain,
     simulate,
-    RolloutSimulator
+    RolloutSimulator,
+    constraint_size
 
 include("core.jl")
 include("rollout.jl")

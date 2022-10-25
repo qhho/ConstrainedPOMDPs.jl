@@ -57,7 +57,7 @@ function simulate(sim::RolloutSimulator, pomdp::ConstrainedPOMDPWrapper, policy:
     end
     disc = 1.0
     r_total = 0.0
-    c_total = 0.0
+    c_total = zeros(constraint_size(pomdp))
     b = initialize_belief(updater, initial_belief)
     step = 1
     while disc > eps && !isterminal(pomdp, s) && step <= max_steps
