@@ -75,7 +75,7 @@ Implement the entire constrained MDP/POMDP generative model by returning a tuple
 
 function POMDPs.gen(cpomdp::ConstrainWrapper, s, a, rng)
     sp, o, r = @gen(:sp, :o, :r)(cpomdp.m, s, a, rng)
-    c = cost(cpomdp.m, s, a, sp, o)
+    c = cost(cpomdp, s, a, sp, o)
     return (sp,o,r,c)
 end
 
