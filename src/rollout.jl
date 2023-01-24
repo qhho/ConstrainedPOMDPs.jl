@@ -38,8 +38,8 @@ function simulate(sim::RolloutSimulator, pomdp::ConstrainedPOMDPWrapper, policy:
     return simulate(sim, pomdp, policy, bu, dist)
 end
 
-function simulate(sim::RolloutSimulator, pomdp::ConstrainedPOMDPWrapper, policy::Policy, updater::Updater, initial_belief) where {S}
-    s = rand(sim.rng, initial_belief)::S
+function simulate(sim::RolloutSimulator, pomdp::ConstrainedPOMDPWrapper, policy::Policy, updater::Updater, initial_belief)
+    s = rand(sim.rng, initial_belief)
     return simulate(sim, pomdp, policy, updater, initial_belief, s)
 end
 
