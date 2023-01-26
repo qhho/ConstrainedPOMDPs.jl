@@ -102,6 +102,7 @@ POMDPs.initialstate(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = initialstate
 POMDPs.obsindex(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, o) = obsindex(m.m, o)
 POMDPs.transition(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s, a) = transition(m.m, s, a)
 POMDPs.observation(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, a, s) = observation(m.m, a, s)
+POMDPs.isterminal(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s) = isterminal(m.m, s) 
 POMDPTools.ordered_states(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_states(m.m)
 POMDPTools.ordered_actions(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_actions(m.m)
 POMDPTools.ordered_observations(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_observations(m.m)
