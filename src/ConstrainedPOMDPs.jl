@@ -17,11 +17,10 @@ export
     cost,
     constraints,
     Constrain,
-    simulate,
-    RolloutSimulator,
     constraint_size
 
 include("core.jl")
+include("gen_impl.jl")
 include("rollout.jl")
 
 end

@@ -1,9 +1,7 @@
 """
     Constrain(m::Union{MDP. POMDP}, cost_constraints::Vector{Float64})
 
-
 """
-
 Constrain(m::MDP, constraints::Vector{Float64}) = ConstrainedMDPWrapper(m, constraints)
 Constrain(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper(m, constraints)
 
@@ -14,22 +12,27 @@ Constrain(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper(m, c
 
 ############
 
-mutable struct ConstrainedMDPWrapper{S,A, M<:MDP} <: MDP{Tuple{S, Int}, A}
+struct ConstrainedMDPWrapper{S,A, M<:MDP} <: MDP{Tuple{S, Int}, A}
     m::M
     constraints::Vector{Float64}
 end
 
+function ConstrainedMDPWrapper(m::MDP{S,A}, c::Vector{Float64}) where {S,A}
+    return ConstrainedMDPWrapper{S,A,typeof(m)}(m, c)
+end
 
-ConstrainedMDPWrapper(m::MDP, constraints::Vector{Float64}) = ConstrainedMDPWrapper{statetype(m), actiontype(m), typeof(m)}(m, constraints)
-
-mutable struct ConstrainedPOMDPWrapper{S,A,O,M<:POMDP} <: POMDP{Tuple{S, Int}, A, Tuple{O,Int}}
+struct ConstrainedPOMDPWrapper{S,A,O,M<:POMDP} <: POMDP{Tuple{S, Int}, A, Tuple{O,Int}}
     m::M
     constraints::Vector{Float64}
 end
 
-ConstrainedPOMDPWrapper(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper{statetype(m), actiontype(m), obstype(m), typeof(m)}(m, constraints)
+function ConstrainedPOMDPWrapper(m::POMDP{S,A,O}, c::Vector{Float64}) where {S,A,O}
+    return ConstrainedPOMDPWrapper{S,A,O,typeof(m)}(m, c)
+end
 
-const ConstrainWrapper = Union{ConstrainedMDPWrapper, ConstrainedPOMDPWrapper}
+const CMDP = ConstrainedMDPWrapper
+const CPOMDP = ConstrainedPOMDPWrapper
+const ConstrainWrapper = Union{CMDP, CPOMDP}
 
 ##################
 
@@ -51,33 +54,8 @@ constraints(w::ConstrainWrapper) = w.constraints
 """
 function cost end
 
-cost(m::Union{POMDP,MDP}, s, a, sp) = cost(m, s, a)
-cost(m::Union{POMDP,MDP}, s, a, sp, o) = cost(m , s, a, sp)
-
-"""
-    POMDPs.gen(w::ConstrainWrapper, ss::Tuple{<:Any,Int}, a, rng::AbstractRNG)
-Implement the entire MDP/POMDP generative model by returning a NamedTuple.
-"""
-
-function POMDPs.gen(w::ConstrainWrapper, ss::Tuple{<:Any,Int}, a, rng::AbstractRNG)
-    out = gen(w.m, first(ss), a, rng)
-    if haskey(out, :sp)
-        return merge(out, (sp=(out.sp, stage(w, ss)+1),))
-    else
-        return out
-    end
-end
-
-"""
-    c_gen(cpomdp, s, a, rng)
-Implement the entire constrained MDP/POMDP generative model by returning a tuple of sp, o, r, c
-"""
-
-function POMDPs.gen(cpomdp::ConstrainWrapper, s, a, rng)
-    sp, o, r = @gen(:sp, :o, :r)(cpomdp.m, s, a, rng)
-    c = cost(cpomdp, s, a, sp, o)
-    return (sp,o,r,c)
-end
+cost(m::ConstrainWrapper, s, a, sp) = cost(m, s, a)
+cost(m::ConstrainWrapper, s, a, sp, o) = cost(m , s, a, sp)
 
 ####################
 
@@ -102,7 +80,7 @@ POMDPs.initialstate(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = initialstate
 POMDPs.obsindex(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, o) = obsindex(m.m, o)
 POMDPs.transition(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s, a) = transition(m.m, s, a)
 POMDPs.observation(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, a, s) = observation(m.m, a, s)
-POMDPs.isterminal(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s) = isterminal(m.m, s) 
+POMDPs.isterminal(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper, s) = isterminal(m.m, s)
 POMDPTools.ordered_states(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_states(m.m)
 POMDPTools.ordered_actions(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_actions(m.m)
 POMDPTools.ordered_observations(m::ConstrainedPOMDPs.ConstrainedPOMDPWrapper) = ordered_observations(m.m)
