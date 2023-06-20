@@ -10,14 +10,14 @@ using Random: Random, AbstractRNG
 
 export
     # Main Type
-    ConstrainedMDPWrapper,
-    ConstrainedPOMDPWrapper,
+    CMDPWrapper,
+    CPOMDPWrapper,
     ConstrainedWrapper,
 
     # Additional Model Functions
     cost,
     constraints,
-    Constrain,
+    constrain,
     constraint_size
 
 include("core.jl")

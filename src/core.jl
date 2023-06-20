@@ -4,63 +4,49 @@ abstract type CMDP{S,A} <: MDP{S,A} end
 const ConstrainedProblem = Union{CMDP, CPOMDP}
 
 """
-    Constrain(m::Union{MDP, POMDP}, cost_constraints::Vector{Float64})
-
+    Return the immediate cost (vector) for the s-a pair
 """
-Constrain(m::MDP, constraints::Vector{Float64}) = ConstrainedMDPWrapper(m, constraints)
-Constrain(m::POMDP, constraints::Vector{Float64}) = ConstrainedPOMDPWrapper(m, constraints)
+function cost end
 
-############
-
-# Wrapper types
-
-############
-
-struct ConstrainedMDPWrapper{S,A, M<:MDP, F} <: CMDP{S, A}
-    cost::F
-    m::M
-    constraints::Vector{Float64}
-end
-
-function ConstrainedMDPWrapper(m::MDP{S,A}, c::Vector{Float64}) where {S,A}
-    return ConstrainedMDPWrapper{S,A,typeof(m), typeof(cost)}(cost, m, c)
-end
-
-struct ConstrainedPOMDPWrapper{S,A,O,M<:POMDP, F} <: CPOMDP{S, A, O}
-    cost::F
-    m::M
-    constraints::Vector{Float64}
-end
-
-function ConstrainedPOMDPWrapper(m::POMDP{S,A,O}, c::Vector{Float64}, cost) where {S,A,O}
-    return ConstrainedPOMDPWrapper{S,A,O,typeof(m), typeof(cost)}(cost, m, c)
-end
-
-const CMDPW = ConstrainedMDPWrapper
-const CPOMDPW = ConstrainedPOMDPWrapper
-const ConstrainWrapper = Union{CMDPW, CPOMDPW}
-
-##################
-
-# ConstrainedPOMDP interface
-
-##################
 """
     Return the constraints
 """
 function constraints end
 
+cost(m::ConstrainedProblem, s, a, sp) = cost(m, s, a)
+cost(m::ConstrainedProblem, s, a, sp, o) = cost(m, s, a, sp)
+
+"""
+    Constrain(cost::Function, m::Union{MDP, POMDP}, cost_constraints::Vector{Float64})
+"""
+constrain(cost::Function, m::MDP, constraints::Vector{Float64}) = CMDPWrapper(cost, m, constraints)
+constrain(cost::Function, m::POMDP, constraints::Vector{Float64}) = CPOMDPWrapper(cost, m, constraints)
+
+struct CMDPWrapper{S,A,M<:MDP,F} <: CMDP{S, A}
+    cost::F
+    m::M
+    constraints::Vector{Float64}
+end
+
+function CMDPWrapper(cost::F, m::MDP{S,A}, c::Vector{Float64}) where {S,A,F}
+    return CMDPWrapper{S,A,typeof(m),F}(cost, m, c)
+end
+
+struct CPOMDPWrapper{S,A,O,M<:POMDP,F} <: CPOMDP{S, A, O}
+    cost::F
+    m::M
+    constraints::Vector{Float64}
+end
+
+function CPOMDPWrapper(cost::F, m::POMDP{S,A,O}, c::Vector{Float64}) where {S,A,O,F}
+    return CPOMDPWrapper{S,A,O,typeof(m), F}(cost, m, c)
+end
+
+const CMDPW = CMDPWrapper
+const CPOMDPW = CPOMDPWrapper
+const ConstrainWrapper = Union{CMDPW, CPOMDPW}
+
 constraints(w::ConstrainWrapper) = w.constraints
-
-"""
-
-    Return the immediate cost (vector) for the s-a pair
-
-"""
-function cost end
-
-# cost(m::ConstrainWrapper, s, a, sp) = cost(m, s, a)
-# cost(m::ConstrainWrapper, s, a, sp, o) = cost(m, s, a, sp)
 
 function cost(m::ConstrainWrapper, args...)
     r = m.cost

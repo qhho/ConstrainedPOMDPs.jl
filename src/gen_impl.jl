@@ -10,9 +10,7 @@
 
     # add gen for any other variables
     for (var, depargs) in POMDPs.sorted_deppairs(m, symbols)
-        if var in (:s, :a) # input nodes
-            continue
-        end
+        var in (:s, :a) && continue # input nodes
 
         sym = Meta.quot(var)
 
