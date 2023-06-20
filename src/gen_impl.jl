@@ -1,6 +1,6 @@
 # Do we really need to rewrite this?
 # Can't we just dispatch on internals below?
-@generated function POMDPs.genout(v::POMDPs.DDNOut{symbols}, m::ConstrainWrapper, s, a, rng) where symbols
+@generated function POMDPs.genout(v::POMDPs.DDNOut{symbols}, m::ConstrainedProblem, s, a, rng) where symbols
 
     # use anything available from gen(m, s, a, rng)
     expr = quote
@@ -37,7 +37,7 @@
     return expr
 end
 
-function POMDPs.sorted_deppairs(m::Type{<:CMDP}, symbols)
+function POMDPs.sorted_deppairs(::Type{<:CMDP}, symbols)
     deps = Dict(:s => Symbol[],
                 :a => Symbol[],
                 :sp => [:s, :a],
@@ -48,7 +48,7 @@ function POMDPs.sorted_deppairs(m::Type{<:CMDP}, symbols)
     return POMDPs.sorted_deppairs(deps, symbols)
 end
 
-function POMDPs.sorted_deppairs(m::Type{<:CPOMDP}, symbols)
+function POMDPs.sorted_deppairs(::Type{<:CPOMDP}, symbols)
     deps = Dict(:s => Symbol[],
                 :a => Symbol[],
                 :sp => [:s, :a],

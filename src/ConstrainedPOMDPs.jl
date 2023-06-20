@@ -5,6 +5,7 @@ module ConstrainedPOMDPs
 
 using POMDPs
 using POMDPTools
+using Tricks
 using Random: Random, AbstractRNG
 
 export
