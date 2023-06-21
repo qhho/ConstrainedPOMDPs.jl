@@ -7,3 +7,27 @@ The goals are to
 
 1. Expressing problems as constrained MDPs and POMDPs.
 2. Interface easily with constrained POMDP solvers.
+
+## Usage
+```julia
+using ConstrainedPOMDPs
+using POMDPModels
+using POMDPs
+
+pomdp = TigerPOMDP()
+cpomdp = constrain(pomdp, [1.0]) do s,a
+    iszero(a) ? [0.5] : 0.0
+end
+
+s = false
+a = 0
+@show cost(cpomdp, s, a)
+sp, o, r, c = @gen(:sp, :o, :r, :c)(cpomdp, s, a)
+@show sp, o, r, c
+```
+
+```julia
+cost(cpomdp, s, a) = [0.5]
+
+(sp, o, r, c) = (false, false, -1.0, [0.5])
+```
