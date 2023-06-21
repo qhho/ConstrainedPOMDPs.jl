@@ -6,8 +6,9 @@ using POMDPModels
 
 @testset "gen" begin
     pomdp = BabyPOMDP()
-    cpomdp = ConstrainedPOMDPs.Constrain(pomdp,[1.0])
-    ConstrainedPOMDPs.cost(m::typeof(cpomdp),s,a) = [1.0]
+    cpomdp = ConstrainedPOMDPs.constrain(pomdp,[1.0]) do s,a
+        [1.0]
+    end
 
     # POMDP
     s = false
@@ -26,8 +27,9 @@ using POMDPModels
 
     ## MDP
     mdp = SimpleGridWorld()
-    cmdp = ConstrainedPOMDPs.Constrain(mdp,[1.0])
-    ConstrainedPOMDPs.cost(m::typeof(cmdp),s,a) = [1.0]
+    cmdp = ConstrainedPOMDPs.constrain(mdp,[1.0]) do s,a
+        [1.0]
+    end
 
     s = GWPos(2,2)
     a = :up
@@ -43,8 +45,9 @@ using POMDPModels
 end
 
 @testset "rollout" begin
-    cpomdp = ConstrainedPOMDPs.Constrain(BabyPOMDP(),[1.0])
-    ConstrainedPOMDPs.cost(m::typeof(cpomdp),s,a) = [1.0]
+    cpomdp = ConstrainedPOMDPs.constrain(BabyPOMDP(),[1.0]) do s,a
+        [1.0]
+    end
 
     sol = POMDPTools.RandomSolver()
     pol = solve(sol, cpomdp)
@@ -53,8 +56,9 @@ end
     @test R isa Float64
     @test C isa Vector{Float64}
 
-    cmdp = ConstrainedPOMDPs.Constrain(SimpleGridWorld(),[1.0])
-    ConstrainedPOMDPs.cost(m::typeof(cmdp),s,a) = [1.0]
+    cmdp = ConstrainedPOMDPs.constrain(SimpleGridWorld(),[1.0]) do s,a
+        [1.0]
+    end
     sol = POMDPTools.RandomSolver()
     pol = solve(sol, cmdp)
     sim = RolloutSimulator(max_steps=10)
