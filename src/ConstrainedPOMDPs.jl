@@ -10,6 +10,8 @@ using Random: Random, AbstractRNG
 
 export
     # Main Type
+    CMDP,
+    CPOMDP,
     CMDPWrapper,
     CPOMDPWrapper,
     ConstrainedWrapper,
