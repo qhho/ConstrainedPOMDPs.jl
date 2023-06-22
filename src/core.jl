@@ -66,12 +66,13 @@ function cost(m::ConstrainWrapper, args...)
     end
 end
 
+constraint_size(m::Union{CMDP, CPOMDP}) = length(constraints(m))
+
 ####################
 
 # Forward parts of POMDPs interface
 
 ####################
-constraint_size(w::ConstrainWrapper)            = length(w.constraints)
 POMDPs.reward(w::CPOMDPW, s, a, sp, o)          = reward(w.m, s, a, sp, o)
 POMDPs.reward(w::ConstrainWrapper, s, a, sp)    = reward(w.m, s, a, sp)
 POMDPs.reward(w::ConstrainWrapper, s, a)        = reward(w.m, s, a)
