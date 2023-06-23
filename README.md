@@ -21,13 +21,13 @@ end
 
 s = false
 a = 0
-@show cost(cpomdp, s, a)
+@show costs(cpomdp, s, a)
 sp, o, r, c = @gen(:sp, :o, :r, :c)(cpomdp, s, a)
 @show sp, o, r, c
 ```
 
 ```julia
-cost(cpomdp, s, a) = [0.5]
+costs(cpomdp, s, a) = [0.5]
 
 (sp, o, r, c) = (false, false, -1.0, [0.5])
 ```
