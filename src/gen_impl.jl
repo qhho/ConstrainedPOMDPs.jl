@@ -58,4 +58,4 @@ function POMDPs.sorted_deppairs(::Type{<:CPOMDP}, symbols)
     return POMDPs.sorted_deppairs(deps, symbols)
 end
 
-POMDPs.node_expr(::Val{:c}, depargs) = :(cost(m, $(depargs...)))
+POMDPs.node_expr(::Val{:c}, depargs) = :(costs(m, $(depargs...)))

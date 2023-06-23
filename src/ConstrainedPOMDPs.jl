@@ -17,7 +17,7 @@ export
     ConstrainedWrapper,
 
     # Additional Model Functions
-    cost,
+    costs,
     constraints,
     constrain,
     constraint_size

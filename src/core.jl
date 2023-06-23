@@ -6,40 +6,40 @@ const ConstrainedProblem = Union{CMDP, CPOMDP}
 """
     Return the immediate cost (vector) for the s-a pair
 """
-function cost end
+function costs end
 
 """
     Return the constraints
 """
 function constraints end
 
-cost(m::ConstrainedProblem, s, a, sp) = cost(m, s, a)
-cost(m::ConstrainedProblem, s, a, sp, o) = cost(m, s, a, sp)
+costs(m::ConstrainedProblem, s, a, sp) = costs(m, s, a)
+costs(m::ConstrainedProblem, s, a, sp, o) = costs(m, s, a, sp)
 
 """
     Constrain(cost::Function, m::Union{MDP, POMDP}, cost_constraints::Vector{Float64})
 """
-constrain(cost::Function, m::MDP, constraints::Vector{Float64}) = CMDPWrapper(cost, m, constraints)
-constrain(cost::Function, m::POMDP, constraints::Vector{Float64}) = CPOMDPWrapper(cost, m, constraints)
+constrain(costs::Function, m::MDP, constraints::Vector{Float64}) = CMDPWrapper(costs, m, constraints)
+constrain(costs::Function, m::POMDP, constraints::Vector{Float64}) = CPOMDPWrapper(costs, m, constraints)
 
 struct CMDPWrapper{S,A,M<:MDP,F,V<:AbstractVector} <: CMDP{S, A}
-    cost::F
+    costs::F
     m::M
     constraints::V
 end
 
-function CMDPWrapper(cost::F, m::MDP{S,A}, c::V) where {S,A,F,V}
-    return CMDPWrapper{S,A,typeof(m),F,V}(cost, m, c)
+function CMDPWrapper(costs::F, m::MDP{S,A}, c::V) where {S,A,F,V}
+    return CMDPWrapper{S,A,typeof(m),F,V}(costs, m, c)
 end
 
 struct CPOMDPWrapper{S,A,O,M<:POMDP,F,V<:AbstractVector} <: CPOMDP{S, A, O}
-    cost::F
+    costs::F
     m::M
     constraints::V
 end
 
-function CPOMDPWrapper(cost::F, m::POMDP{S,A,O}, c::V) where {S,A,O,F,V}
-    return CPOMDPWrapper{S,A,O,typeof(m),F,V}(cost, m, c)
+function CPOMDPWrapper(costs::F, m::POMDP{S,A,O}, c::V) where {S,A,O,F,V}
+    return CPOMDPWrapper{S,A,O,typeof(m),F,V}(costs, m, c)
 end
 
 const CMDPW = CMDPWrapper
@@ -49,8 +49,8 @@ const ConstrainWrapper = Union{CMDPW, CPOMDPW}
 constraints(w::ConstrainWrapper) = w.constraints
 
 # Taken from QuickPOMDPs.jl
-function cost(m::ConstrainWrapper, args...)
-    c = m.cost
+function costs(m::ConstrainWrapper, args...)
+    c = m.costs
     if static_hasmethod(c, typeof(args))
         return c(args...)
     elseif m isa POMDP && length(args) == 4
