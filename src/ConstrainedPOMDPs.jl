@@ -25,5 +25,6 @@ export
 include("core.jl")
 include("gen_impl.jl")
 include("rollout.jl")
+include("underlying.jl")
 
 end
