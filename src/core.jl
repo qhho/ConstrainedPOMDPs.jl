@@ -4,12 +4,14 @@ abstract type CMDP{S,A} <: MDP{S,A} end
 const ConstrainedProblem = Union{CMDP, CPOMDP}
 
 """
-    Return the immediate cost (vector) for the s-a pair
+    costs(m::Union{CMPD,CPOMDP}, s, a)
+
+Return the immediate cost (vector) for the s-a pair
 """
 function costs end
 
 """
-    Return the constraints
+    constraints(m::Union{CMPD,CPOMDP})
 """
 function constraints end
 
@@ -17,10 +19,12 @@ costs(m::ConstrainedProblem, s, a, sp) = costs(m, s, a)
 costs(m::ConstrainedProblem, s, a, sp, o) = costs(m, s, a, sp)
 
 """
-    Constrain(cost::Function, m::Union{MDP, POMDP}, cost_constraints::Vector{Float64})
+    constrain(cost::Function, m::Union{MDP, POMDP}, cost_constraints::AbstractVector)
 """
-constrain(costs::Function, m::MDP, constraints::Vector{Float64}) = CMDPWrapper(costs, m, constraints)
-constrain(costs::Function, m::POMDP, constraints::Vector{Float64}) = CPOMDPWrapper(costs, m, constraints)
+function constrain end
+
+constrain(costs::Function, m::MDP, constraints::AbstractVector) = CMDPWrapper(costs, m, constraints)
+constrain(costs::Function, m::POMDP, constraints::AbstractVector) = CPOMDPWrapper(costs, m, constraints)
 
 struct CMDPWrapper{S,A,M<:MDP,F,V<:AbstractVector} <: CMDP{S, A}
     costs::F
