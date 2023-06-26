@@ -6,10 +6,12 @@ module ConstrainedPOMDPs
 using POMDPs
 using POMDPTools
 using Tricks
+using Lazy
 using Random: Random, AbstractRNG
 
 export
-    # Main Type
+    @MDP_forward,
+    @POMDP_forward,
     CMDP,
     CPOMDP,
     CMDPWrapper,
@@ -22,6 +24,7 @@ export
     constrain,
     constraint_size
 
+include("forward.jl")
 include("core.jl")
 include("gen_impl.jl")
 include("rollout.jl")
