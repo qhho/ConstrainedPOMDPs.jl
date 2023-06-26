@@ -1,8 +1,11 @@
 using Test
 using POMDPs
 using ConstrainedPOMDPs
+const CPOMDPs = ConstrainedPOMDPs
 using POMDPTools
 using POMDPModels
+
+include(joinpath(@__DIR__, "forward.jl"))
 
 @testset "gen" begin
     pomdp = BabyPOMDP()
