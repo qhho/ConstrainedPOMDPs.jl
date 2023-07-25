@@ -5,7 +5,7 @@ This package aims to provide a standard interface for defining constrained MDP a
 
 The goals are to
 
-1. Expressing problems as constrained MDPs and POMDPs.
+1. Express problems as constrained MDPs and POMDPs.
 2. Interface easily with constrained POMDP solvers.
 
 ## Usage
