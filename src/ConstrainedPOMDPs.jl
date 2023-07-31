@@ -22,7 +22,8 @@ export
     costs,
     constraints,
     constrain,
-    constraint_size
+    constraint_size,
+    ⪯, ≺, ⪰, ≻
 
 include("forward.jl")
 include("core.jl")

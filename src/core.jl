@@ -94,3 +94,22 @@ POMDPs.isterminal(m::ConstrainWrapper, s)       = isterminal(m.m, s)
 POMDPTools.ordered_states(m::ConstrainWrapper)  = ordered_states(m.m)
 POMDPTools.ordered_actions(m::ConstrainWrapper) = ordered_actions(m.m)
 POMDPTools.ordered_observations(m::CPOMDPW)     = ordered_observations(m.m)
+
+## generalized inequalities
+function ≺(v1::AbstractArray, v2::AbstractArray)
+    @inbounds for i ∈ eachindex(v1, v2)
+        v1[i] ≥ v2[i] && return false
+    end
+    return true
+end
+
+function ⪯(v1::AbstractArray, v2::AbstractArray)
+    @inbounds for i ∈ eachindex(v1, v2)
+        v1[i] > v2[i] && return false
+    end
+    return true
+end
+
+@inline ≻(v1,v2) = ≺(v2, v1)
+
+@inline ⪰(v1,v2) = ⪯(v2, v1)

@@ -69,3 +69,28 @@ end
     @test R isa Float64
     @test C isa Vector{Float64}
 end
+
+@testset "ineq" begin
+    v1 = [1.,2.,3.]
+    v2 = [2.,3.,4.]
+
+    @test v1 ⪯ v2
+    @test v1 ≺ v2
+    @test v2 ⪰ v1
+    @test v2 ≻ v1
+
+    v1 = [2.,2.,3.]
+    v2 = [2.,3.,4.]
+
+    @test v1 ⪯ v2
+    @test !(v1 ≺ v2)
+    @test v2 ⪰ v1
+    @test !(v2 ≻ v1)
+
+    v1 = [1,2,3]
+    v2 = [3,2,1]
+    @test !(v1 ⪯ v2)
+    @test !(v1 ≺ v2)
+    @test !(v2 ⪰ v1)
+    @test !(v2 ≻ v1)
+end
