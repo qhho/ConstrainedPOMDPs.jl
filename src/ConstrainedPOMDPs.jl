@@ -7,6 +7,7 @@ using POMDPs
 using POMDPTools
 using Tricks
 using Lazy
+using SparseArrays
 using Random: Random, AbstractRNG
 
 export
@@ -29,6 +30,6 @@ include("forward.jl")
 include("core.jl")
 include("gen_impl.jl")
 include("rollout.jl")
-include("underlying.jl")
+include(joinpath("CPOMDPTools", "CPOMDPTools.jl"))
 
 end

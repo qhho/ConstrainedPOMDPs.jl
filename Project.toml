@@ -8,6 +8,7 @@ Lazy = "50d2b5c4-7a5e-59d5-8109-a42b560f39c0"
 POMDPTools = "7588e00f-9cae-40de-98dc-e0c70c48cdd7"
 POMDPs = "a93abf59-7444-517b-a68a-c42f96afdd7d"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Tricks = "410a4b4d-49e4-4fbc-ab6d-cb71b17b3775"
 
 [compat]
