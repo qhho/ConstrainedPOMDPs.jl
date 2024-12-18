@@ -12,5 +12,9 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Tricks = "410a4b4d-49e4-4fbc-ab6d-cb71b17b3775"
 
 [compat]
-POMDPTools = "0.1"
-POMDPs = "0.9"
+Lazy = "0.15"
+POMDPTools = "1"
+POMDPs = "1"
+Tricks = "0.1"
+Random = "1"
+SparseArrays = "1"
