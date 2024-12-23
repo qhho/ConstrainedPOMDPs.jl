@@ -20,7 +20,29 @@ function TabularCPOMDP(pomdp::CPOMDP)
     C = _tabular_costs(pomdp, S, A)
     term = _vectorized_terminal(pomdp, S)
     b0 = _vectorized_initialstate(pomdp, S)
-    return TabularCPOMDP(T,R,O,C,term,b0,pomdp.constraints,discount(pomdp))
+    return TabularCPOMDP(T,R,O,C,term,b0,constraints(pomdp),discount(pomdp))
+end
+
+struct TabularCMDP <: CMDP{Int,Int}
+    T::Vector{SparseMatrixCSC{Float64, Int64}} # T[a][sp, s]
+    R::Array{Float64, 2} # R[s,a]
+    C::Array{Float64, 3} # C[s,a,c_i]
+    isterminal::BitVector
+    initialstate::SparseVector{Float64, Int}
+    constraints::Vector{Float64}
+    discount::Float64
+end
+
+function TabularCMDP(m::CMDP)
+    S = ordered_states(m)
+    A = ordered_actions(m)
+
+    T = transition_matrix_a_sp_s(m)
+    R = _tabular_rewards(m, S, A)
+    C = _tabular_costs(m, S, A)
+    term = _vectorized_terminal(m, S)
+    b0 = _vectorized_initialstate(m, S)
+    return TabularCMDP(T, R, C, term, b0, constraints(m), discount(m))
 end
 
 function transition_matrix_a_sp_s(mdp::Union{MDP, POMDP})
@@ -103,30 +125,32 @@ function _vectorized_initialstate(pomdp, S)
     return sparse(b0_vec)
 end
 
-POMDPTools.ordered_states(pomdp::TabularCPOMDP) = axes(pomdp.R, 1)
-POMDPs.states(pomdp::TabularCPOMDP) = ordered_states(pomdp)
-POMDPTools.ordered_actions(pomdp::TabularCPOMDP) = eachindex(pomdp.T)
-POMDPs.actions(pomdp::TabularCPOMDP) = ordered_actions(pomdp)
+const TabularConstrainedProblem = Union{TabularCMDP, TabularCPOMDP}
+
+POMDPTools.ordered_states(pomdp::TabularConstrainedProblem) = axes(pomdp.R, 1)
+POMDPs.states(pomdp::TabularConstrainedProblem) = ordered_states(pomdp)
+POMDPTools.ordered_actions(pomdp::TabularConstrainedProblem) = eachindex(pomdp.T)
+POMDPs.actions(pomdp::TabularConstrainedProblem) = ordered_actions(pomdp)
 POMDPTools.ordered_observations(pomdp::TabularCPOMDP) = axes(first(pomdp.O), 2)
 POMDPs.observations(pomdp::TabularCPOMDP) = ordered_observations(pomdp)
 
-POMDPs.stateindex(::TabularCPOMDP, s::Int) = s
-POMDPs.actionindex(::TabularCPOMDP, a::Int) = a
+POMDPs.stateindex(::TabularConstrainedProblem, s::Int) = s
+POMDPs.actionindex(::TabularConstrainedProblem, a::Int) = a
 POMDPs.obsindex(::TabularCPOMDP, o::Int) = o
 
-POMDPs.discount(pomdp::TabularCPOMDP) = pomdp.discount
+POMDPs.discount(pomdp::TabularConstrainedProblem) = pomdp.discount
 
-ConstrainedPOMDPs.constraint_size(pomdp::TabularCPOMDP) = size(pomdp.C, 3)
+ConstrainedPOMDPs.constraint_size(pomdp::TabularConstrainedProblem) = size(pomdp.C, 3)
 
-n_states(pomdp::TabularCPOMDP) = length(states(pomdp))
-n_actions(pomdp::TabularCPOMDP) = length(actions(pomdp))
+n_states(pomdp::TabularConstrainedProblem) = length(states(pomdp))
+n_actions(pomdp::TabularConstrainedProblem) = length(actions(pomdp))
 n_observations(pomdp::TabularCPOMDP) = length(observations(pomdp))
-n_constraints(pomdp::TabularCPOMDP) = size(pomdp.C, 3)
+n_constraints(pomdp::TabularConstrainedProblem) = size(pomdp.C, 3)
 const n_cost = n_constraints
 
-POMDPs.initialstate(p::TabularCPOMDP) = SparseCat(ordered_states(p), p.initialstate)
-POMDPs.transition(p::TabularCPOMDP, s, a) = SparseCat(ordered_states(p), p.T[a][:,s])
+POMDPs.initialstate(p::TabularConstrainedProblem) = SparseCat(ordered_states(p), p.initialstate)
+POMDPs.transition(p::TabularConstrainedProblem, s, a) = SparseCat(ordered_states(p), p.T[a][:,s])
 POMDPs.observation(p::TabularCPOMDP, a, sp) = SparseCat(ordered_observations(p), p.O[a][sp,:])
-POMDPs.reward(p::TabularCPOMDP, s, a) = p.R[s,a]
-ConstrainedPOMDPs.costs(p::TabularCPOMDP, s, a) = p.C[s,a,:]
-ConstrainedPOMDPs.constraints(p::TabularCPOMDP) = p.constraints
+POMDPs.reward(p::TabularConstrainedProblem, s, a) = p.R[s,a]
+ConstrainedPOMDPs.costs(p::TabularConstrainedProblem, s, a) = p.C[s,a,:]
+ConstrainedPOMDPs.constraints(p::TabularConstrainedProblem) = p.constraints
